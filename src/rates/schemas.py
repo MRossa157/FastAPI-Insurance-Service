@@ -13,6 +13,7 @@ class CargoInfo(BaseModel):
 
 
 class RateResponse(CargoInfo):
+    rate_id: int
     effective_date: datetime
 
 
@@ -37,3 +38,7 @@ class RatesUpload(RootModel[Dict[datetime, List[CargoInfo]]]):
 
 class RatesUploadResponse(BaseResponse):
     message: str = 'Rates successfully uploaded.'
+
+
+class RateDeleteResponse(BaseResponse):
+    message: str = 'Rate successfully deleted.'
