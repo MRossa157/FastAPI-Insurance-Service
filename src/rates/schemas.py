@@ -12,8 +12,11 @@ class CargoInfo(BaseModel):
     rate: float
 
 
-class RatesUpload(RootModel[Dict[datetime, List[CargoInfo]]]):
+class RateResponse(CargoInfo):
+    effective_date: datetime
 
+
+class RatesUpload(RootModel[Dict[datetime, List[CargoInfo]]]):
     @field_validator('root', mode='before')
     @classmethod
     def check_datetime_keys(
@@ -23,7 +26,7 @@ class RatesUpload(RootModel[Dict[datetime, List[CargoInfo]]]):
         converted_dict = {}
         for key, cargos in value.items():
             try:
-                date_key = datetime.strptime(key, "%Y-%m-%d")
+                date_key = datetime.strptime(key, '%Y-%m-%d')
             except ValueError:
                 raise InvalidKeyFormatError(key=key)
 
