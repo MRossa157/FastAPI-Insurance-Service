@@ -23,6 +23,7 @@ cd fastapi-insurance-service
 
 ### 2. Установка зависимостей и запуск
 ```bash
+pip install poetry
 poetry install
 make app
 ```
