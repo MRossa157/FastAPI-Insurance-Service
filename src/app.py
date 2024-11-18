@@ -3,6 +3,7 @@ from os import environ
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.insurance.views import router as insurance_router
 from src.rates.views import router as rates_router
 from src.security import cors_settings
 
@@ -14,6 +15,12 @@ app.include_router(
     rates_router,
     prefix='/rates',
     tags=['rates'],
+)
+
+app.include_router(
+    insurance_router,
+    prefix='/insurance',
+    tags=['insurance'],
 )
 
 

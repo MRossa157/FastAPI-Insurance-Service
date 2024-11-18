@@ -28,8 +28,8 @@ async def delete_rate_service(rate_id: int, session: AsyncSession) -> None:
 
 async def get_available_rates_service(
     session: AsyncSession,
-    cargo_type: Optional[str],
-    effective_date: Optional[datetime],
+    cargo_type: Optional[str] = None,
+    effective_date: Optional[datetime] = None,
 ) -> List[RateResponse]:
     rates = await get_rates(
         session=session,
