@@ -12,12 +12,11 @@ async def upload_rates_service(
     data: RatesUpload,
     session: AsyncSession,
 ) -> None:
-    rates = []
-    for date, rates_info in data.root.items():
-        rates = [
-            Rates(date=date, cargo_type=rate.cargo_type, rate=rate.rate)
-            for rate in rates_info
-        ]
+    rates = [
+        Rates(date=date, cargo_type=rate.cargo_type, rate=rate.rate)
+        for date, rates_info in data.root.items()
+        for rate in rates_info
+    ]
 
     await add_rates(rates, session)
 

@@ -4,10 +4,18 @@ from typing import List, Optional
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.constants import NUMBER_PRECISION
+from src.insurance.crud import (
+    add_to_insurance_history,
+    get_insurance_calculate_history,
+)
 from src.insurance.exceptions import ApplicableRateNotFoundError
-from src.insurance.schemas import InsuranceCalculateRequest
+from src.insurance.schemas import (
+    InsuranceCalculateRequest,
+    InsuranceHistoryItem,
+)
 from src.rates.schemas import RateResponse
 from src.rates.services import get_available_rates_service
+from src.utils.models.models import InsuranceHistory
 
 
 async def calculate_insurance_service(
@@ -34,7 +42,14 @@ async def calculate_insurance_service(
         NUMBER_PRECISION,
     )
 
-    #TODO добавить запись в БД
+    await add_to_insurance_history(
+        item=InsuranceHistory(
+            cargo_type=insurance_data.cargo_type,
+            declared_value=insurance_data.declared_value,
+            insurance_cost=insurance_cost,
+        ),
+        session=session,
+    )
 
     return insurance_cost
 
@@ -51,3 +66,17 @@ def find_applicable_rate(
         return max(applicable_rates, key=lambda rate: rate.effective_date)
 
     return None
+
+
+async def get_insurance_calculate_history_service(
+    session: AsyncSession,
+    cargo_type: Optional[str] = None,
+    start_date: Optional[datetime] = None,
+    end_date: Optional[datetime] = None,
+) -> List[InsuranceHistoryItem]:
+    return await get_insurance_calculate_history(
+        session=session,
+        cargo_type=cargo_type,
+        start_date=start_date,
+        end_date=end_date,
+    )
